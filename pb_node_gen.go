@@ -725,7 +725,7 @@ func (mb *_PBLink__MapBuilder) Delete(k ipld.Node) error {
 	panic("TODO later")
 }
 func (mb *_PBLink__MapBuilder) Build() (ipld.Node, error) {
-	v := mb.v
+	v := *mb.v
 	mb = nil
 	return v, nil
 }
@@ -1260,7 +1260,7 @@ func (lb *_PBLinks__ListBuilder) Set(idx int, v ipld.Node) error {
 }
 
 func (lb *_PBLinks__ListBuilder) Build() (ipld.Node, error) {
-	v := lb.v
+	v := *lb.v
 	lb = nil
 	return v, nil
 }
@@ -1504,7 +1504,7 @@ func (mb *_PBNode__MapBuilder) Build() (ipld.Node, error) {
 	if !mb.Data__isset {
 		panic("missing required field 'Data' in building struct PBNode") // FIXME need an error type for this
 	}
-	v := mb.v
+	v := *mb.v
 	mb = nil
 	return v, nil
 }

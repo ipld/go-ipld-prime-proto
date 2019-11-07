@@ -14,6 +14,7 @@ require (
 	github.com/ipfs/go-ipld-format v0.0.2
 	github.com/ipfs/go-merkledag v0.2.4
 	github.com/ipfs/go-unixfs v0.2.2
-	github.com/ipld/go-ipld-prime v0.0.2-0.20191025153308-092ea9a7696d
+	github.com/ipld/go-ipld-prime v0.0.2-0.20191107223102-02b9c8dc1b24
+	github.com/jbenet/go-random v0.0.0-20190219211222-123a90aedc0c
 	github.com/warpfork/go-wish v0.0.0-20190328234359-8b3e70f8e830
 )

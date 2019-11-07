@@ -27,11 +27,10 @@ func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
 		if err != nil {
 			return nil, fmt.Errorf("unmarshal failed. %v", err)
 		}
-
 		pbLinks = append(pbLinks, PBLink{
 			&Link{cidlink.Link{Cid: hash}},
 			&String{link.GetName()},
-			&Int{link.Size()},
+			&Int{int(link.GetTsize())},
 		})
 	}
 	pbData := Bytes{pbn.GetData()}

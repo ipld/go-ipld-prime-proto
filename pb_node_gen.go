@@ -6,6 +6,8 @@ import (
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
+// Code generated go-ipld-prime DO NOT EDIT.
+
 type String struct{ x string }
 
 func (x String) String() string {

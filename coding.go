@@ -11,6 +11,8 @@ import (
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 )
 
+// DecodeDagProto is a fast path decoding to protobuf
+// from PBNode__NodeBuilders
 func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
 	var pbn merkledag_pb.PBNode
 	encoded, err := ioutil.ReadAll(r)
@@ -37,6 +39,8 @@ func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
 	return PBNode{PBLinks{pbLinks}, pbData}, nil
 }
 
+// EncodeDagProto is a fast path encoding to protobuf
+// for PBNode types
 func (nd PBNode) EncodeDagProto(w io.Writer) error {
 	pbn := new(merkledag_pb.PBNode)
 	pbn.Links = make([]*merkledag_pb.PBLink, 0, len(nd.Links.x))
@@ -74,6 +78,8 @@ func (nd PBNode) EncodeDagProto(w io.Writer) error {
 	return nil
 }
 
+// DecodeDagRaw is a fast path decoding to protobuf
+// from RawNode__NodeBuilders
 func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) (ipld.Node, error) {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -82,6 +88,8 @@ func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) (ipld.Node, error) {
 	return RawNode{data}, nil
 }
 
+// EncodeDagRaw is a fast path encoding to protobuf
+// for RawNode types
 func (nd RawNode) EncodeDagRaw(w io.Writer) error {
 	_, err := w.Write(nd.x)
 	if err != nil {

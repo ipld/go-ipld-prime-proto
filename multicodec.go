@@ -9,22 +9,25 @@ import (
 )
 
 var (
-	ErrNoAutomaticDecoding                           = errors.New("No automatic decoding for this type, node builder must provide fast path")
+	// ErrNoAutomaticDecoding means the NodeBuilder must provide a fast path decoding method on its own
+	ErrNoAutomaticDecoding = errors.New("No automatic decoding for this type, node builder must provide fast path")
+	// ErrNoAutomaticEncoding means the Node must provide a fast path encoding method on its own
 	ErrNoAutomaticEncoding                           = errors.New("No automatic encoding for this type, node must provide fast path")
-	_                      cidlink.MulticodecDecoder = DagPBDecoder
-	_                      cidlink.MulticodecEncoder = DagPBEncoder
+	_                      cidlink.MulticodecDecoder = PBDecoder
+	_                      cidlink.MulticodecEncoder = PBEncoder
 	_                      cidlink.MulticodecDecoder = RawDecoder
 	_                      cidlink.MulticodecEncoder = RawEncoder
 )
 
 func init() {
-	cidlink.RegisterMulticodecDecoder(0x70, DagPBDecoder)
-	cidlink.RegisterMulticodecEncoder(0x70, DagPBEncoder)
+	cidlink.RegisterMulticodecDecoder(0x70, PBDecoder)
+	cidlink.RegisterMulticodecEncoder(0x70, PBEncoder)
 	cidlink.RegisterMulticodecDecoder(0x55, RawDecoder)
 	cidlink.RegisterMulticodecEncoder(0x55, RawEncoder)
 }
 
-func DagPBDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
+// PBDecoder is a decoder function for Dag Protobuf nodes
+func PBDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.NodeBuilder supports this, for example.)
 	type detectFastPath interface {
@@ -37,7 +40,8 @@ func DagPBDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
 	return nil, ErrNoAutomaticDecoding
 }
 
-func DagPBEncoder(n ipld.Node, w io.Writer) error {
+// PBEncoder is a encoder function that encodes to Dag Protobuf
+func PBEncoder(n ipld.Node, w io.Writer) error {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.Node supports this, for example.)
 	type detectFastPath interface {
@@ -50,6 +54,7 @@ func DagPBEncoder(n ipld.Node, w io.Writer) error {
 	return ErrNoAutomaticEncoding
 }
 
+// RawDecoder is a decoder function for raw coded nodes
 func RawDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.NodeBuilder supports this, for example.)
@@ -63,6 +68,7 @@ func RawDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
 	return nil, ErrNoAutomaticDecoding
 }
 
+// RawEncoder encodes a node to a raw block structure
 func RawEncoder(n ipld.Node, w io.Writer) error {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.Node supports this, for example.)

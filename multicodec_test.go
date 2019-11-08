@@ -41,9 +41,9 @@ func TestRoundTripProtbuf(t *testing.T) {
 	Wish(t, err, ShouldEqual, nil)
 	t.Run("encode/decode equivalency", func(t *testing.T) {
 		var buf bytes.Buffer
-		err := dagpb.DagPBEncoder(pbNode, &buf)
+		err := dagpb.PBEncoder(pbNode, &buf)
 		Wish(t, err, ShouldEqual, nil)
-		pbNode2, err := dagpb.DagPBDecoder(dagpb.PBNode__NodeBuilder(), &buf)
+		pbNode2, err := dagpb.PBDecoder(dagpb.PBNode__NodeBuilder(), &buf)
 		Wish(t, err, ShouldEqual, nil)
 		Wish(t, pbNode2, ShouldEqual, pbNode)
 	})

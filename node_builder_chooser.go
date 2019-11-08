@@ -6,6 +6,8 @@ import (
 	"github.com/ipld/go-ipld-prime/traversal"
 )
 
+// AddDagPBSupportToChooser takes an existing NodeBuilderChooser and subs in
+// Protobuf and Raw node builders where neccesary
 func AddDagPBSupportToChooser(existing traversal.NodeBuilderChooser) traversal.NodeBuilderChooser {
 	return func(lnk ipld.Link, lnkCtx ipld.LinkContext) ipld.NodeBuilder {
 		c, ok := lnk.(cidlink.Link)

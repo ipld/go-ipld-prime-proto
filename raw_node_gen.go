@@ -6,6 +6,8 @@ import (
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
+// Code generated go-ipld-prime DO NOT EDIT.
+
 type RawNode struct{ x []byte }
 
 // TODO generateKindBytes.EmitNativeAccessors

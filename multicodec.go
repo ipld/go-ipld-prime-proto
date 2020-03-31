@@ -27,17 +27,17 @@ func init() {
 }
 
 // PBDecoder is a decoder function for Dag Protobuf nodes
-func PBDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
+func PBDecoder(nb ipld.NodeAssembler, r io.Reader) error {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.NodeBuilder supports this, for example.)
 	type detectFastPath interface {
-		DecodeDagProto(io.Reader) (ipld.Node, error)
+		DecodeDagProto(io.Reader) error
 	}
 	if nb2, ok := nb.(detectFastPath); ok {
 		return nb2.DecodeDagProto(r)
 	}
 	// Okay, generic builder path.
-	return nil, ErrNoAutomaticDecoding
+	return ErrNoAutomaticDecoding
 }
 
 // PBEncoder is a encoder function that encodes to Dag Protobuf
@@ -55,17 +55,17 @@ func PBEncoder(n ipld.Node, w io.Writer) error {
 }
 
 // RawDecoder is a decoder function for raw coded nodes
-func RawDecoder(nb ipld.NodeBuilder, r io.Reader) (ipld.Node, error) {
+func RawDecoder(nb ipld.NodeAssembler, r io.Reader) error {
 	// Probe for a builtin fast path.  Shortcut to that if possible.
 	//  (ipldcbor.NodeBuilder supports this, for example.)
 	type detectFastPath interface {
-		DecodeDagRaw(io.Reader) (ipld.Node, error)
+		DecodeDagRaw(io.Reader) error
 	}
 	if nb2, ok := nb.(detectFastPath); ok {
 		return nb2.DecodeDagRaw(r)
 	}
 	// Okay, generic builder path.
-	return nil, ErrNoAutomaticDecoding
+	return ErrNoAutomaticDecoding
 }
 
 // RawEncoder encodes a node to a raw block structure

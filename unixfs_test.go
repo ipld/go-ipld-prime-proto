@@ -137,19 +137,19 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	pbLinkBuilder := clink.LinkBuilder()
 
 	// get a raw link builder
-	pbNode, ok := primeNd.(dagpb.PBNode)
-	link, err := pbNode.Links.LookupIndex(0)
+	links, err := primeNd.LookupString("Links")
 	Wish(t, err, ShouldEqual, nil)
-	pbLink, ok := link.(dagpb.PBLink)
-	Wish(t, ok, ShouldEqual, true)
-	rawLink, err := pbLink.Hash.AsLink()
+	link, err := links.LookupIndex(0)
 	Wish(t, err, ShouldEqual, nil)
-	rawLinkBuilder := rawLink.LinkBuilder()
-	Wish(t, ok, ShouldEqual, true)
+	rawLink, err := link.LookupString("Hash")
+	Wish(t, err, ShouldEqual, nil)
+	rawLinkLink, err := rawLink.AsLink()
+	Wish(t, err, ShouldEqual, nil)
+	rawLinkBuilder := rawLinkLink.LinkBuilder()
 
 	// setup a node builder chooser with DagPB + Raw support
-	var defaultChooser traversal.NodeBuilderChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) ipld.NodeBuilder {
-		return ipldfree.NodeBuilder()
+	var defaultChooser traversal.NodeBuilderChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeBuilder, error) {
+		return ipldfree.NodeBuilder(), nil
 	})
 
 	// create a selector for the whole UnixFS dag

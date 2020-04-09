@@ -2,7 +2,6 @@ package dagpb
 
 import (
 	ipld "github.com/ipld/go-ipld-prime"
-	"github.com/ipld/go-ipld-prime/impl/typed"
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
@@ -34,19 +33,19 @@ func (b String__Content) MustBuild() String {
 }
 
 type MaybeString struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value String
 }
 
 func (m MaybeString) Must() String {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = String{}
-var _ typed.Node = String{}
+var _ schema.TypedNode = String{}
 
 func (String) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -149,19 +148,19 @@ func (x Int) Int() int {
 }
 // TODO generateKindInt.EmitNativeBuilder
 type MaybeInt struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value Int
 }
 
 func (m MaybeInt) Must() Int {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = Int{}
-var _ typed.Node = Int{}
+var _ schema.TypedNode = Int{}
 
 func (Int) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -262,19 +261,19 @@ type Bytes struct{ x []byte }
 // TODO generateKindBytes.EmitNativeAccessors
 // TODO generateKindBytes.EmitNativeBuilder
 type MaybeBytes struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value Bytes
 }
 
 func (m MaybeBytes) Must() Bytes {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = Bytes{}
-var _ typed.Node = Bytes{}
+var _ schema.TypedNode = Bytes{}
 
 func (Bytes) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -375,19 +374,19 @@ type Link struct{ x ipld.Link }
 // TODO generateKindLink.EmitNativeAccessors
 // TODO generateKindLink.EmitNativeBuilder
 type MaybeLink struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value Link
 }
 
 func (m MaybeLink) Must() Link {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = Link{}
-var _ typed.Node = Link{}
+var _ schema.TypedNode = Link{}
 
 func (Link) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -485,36 +484,28 @@ func (Link) Representation() ipld.Node {
 	panic("TODO representation")
 }
 type PBLink struct{
-	Hash *Link
-	Name *String
-	Tsize *Int
-	
+	d PBLink__Content
 }
 
-func (x Link) FieldHash() Link {
-	// TODO going to tear through here with changes to Maybe system in a moment anyway
-	return Link{}
+func (x PBLink) FieldHash()MaybeLink {
+	return x.d.Hash
 }
-func (x String) FieldName() String {
-	// TODO going to tear through here with changes to Maybe system in a moment anyway
-	return String{}
+func (x PBLink) FieldName()MaybeString {
+	return x.d.Name
 }
-func (x Int) FieldTsize() Int {
-	// TODO going to tear through here with changes to Maybe system in a moment anyway
-	return Int{}
+func (x PBLink) FieldTsize()MaybeInt {
+	return x.d.Tsize
 }
 
 
 type PBLink__Content struct {
-	// TODO
-	// TODO
-	// TODO
+	Hash MaybeLink
+	Name MaybeString
+	Tsize MaybeInt
 }
 
 func (b PBLink__Content) Build() (PBLink, error) {
-	x := PBLink{
-		// TODO
-	}
+	x := PBLink{b}
 	// FUTURE : want to support customizable validation.
 	//   but 'if v, ok := x.(schema.Validatable); ok {' doesn't fly: need a way to work on concrete types.
 	return x, nil
@@ -528,19 +519,19 @@ func (b PBLink__Content) MustBuild() PBLink {
 }
 
 type MaybePBLink struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value PBLink
 }
 
 func (m MaybePBLink) Must() PBLink {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = PBLink{}
-var _ typed.Node = PBLink{}
+var _ schema.TypedNode = PBLink{}
 
 func (PBLink) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -551,22 +542,22 @@ func (PBLink) ReprKind() ipld.ReprKind {
 func (x PBLink) LookupString(key string) (ipld.Node, error) {
 	switch key {
 	case "Hash":
-		if x.Hash == nil {
+		if x.d.Hash.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, nil
 		}
-		return *x.Hash, nil
+		return x.d.Hash.Value, nil
 	case "Name":
-		if x.Name == nil {
+		if x.d.Name.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, nil
 		}
-		return *x.Name, nil
+		return x.d.Name.Value, nil
 	case "Tsize":
-		if x.Tsize == nil {
+		if x.d.Tsize.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, nil
 		}
-		return *x.Tsize, nil
+		return x.d.Tsize.Value, nil
 	default:
-		return nil, typed.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
+		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
 func (x PBLink) Lookup(key ipld.Node) (ipld.Node, error) {
@@ -598,25 +589,25 @@ func (itr *_PBLink__Itr) Next() (k ipld.Node, v ipld.Node, _ error) {
 	switch itr.idx {
 	case 0:
 		k = String{"Hash"}
-		if itr.node.Hash == nil {
+		if itr.node.d.Hash.Maybe == schema.Maybe_Absent {
 			v = ipld.Undef
 			break
 		}
-		v = itr.node.Hash
+		v = itr.node.d.Hash.Value
 	case 1:
 		k = String{"Name"}
-		if itr.node.Name == nil {
+		if itr.node.d.Name.Maybe == schema.Maybe_Absent {
 			v = ipld.Undef
 			break
 		}
-		v = itr.node.Name
+		v = itr.node.d.Name.Value
 	case 2:
 		k = String{"Tsize"}
-		if itr.node.Tsize == nil {
+		if itr.node.d.Tsize.Maybe == schema.Maybe_Absent {
 			v = ipld.Undef
 			break
 		}
-		v = itr.node.Tsize
+		v = itr.node.d.Tsize.Value
 	default:
 		panic("unreachable")
 	}
@@ -666,7 +657,11 @@ func PBLink__NodeBuilder() ipld.NodeBuilder {
 	return _PBLink__NodeBuilder{}
 }
 func (nb _PBLink__NodeBuilder) CreateMap() (ipld.MapBuilder, error) {
-	return &_PBLink__MapBuilder{v:&PBLink{}}, nil
+	mb := &_PBLink__MapBuilder{v:&PBLink{}}
+	mb.v.d.Hash.Maybe = schema.Maybe_Absent
+	mb.v.d.Name.Maybe = schema.Maybe_Absent
+	mb.v.d.Tsize.Maybe = schema.Maybe_Absent
+	return mb, nil
 }
 
 type _PBLink__MapBuilder struct{
@@ -683,43 +678,46 @@ func (mb *_PBLink__MapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Link)
 		if !ok {
 			panic("field 'Hash' in type PBLink is type Link; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Hash = &x
+		mb.v.d.Hash.Value = x
+		mb.v.d.Hash.Maybe = schema.Maybe_Value
 	case "Name":
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(String)
 		if !ok {
 			panic("field 'Name' in type PBLink is type String; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Name = &x
+		mb.v.d.Name.Value = x
+		mb.v.d.Name.Maybe = schema.Maybe_Value
 	case "Tsize":
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Int)
 		if !ok {
 			panic("field 'Tsize' in type PBLink is type Int; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Tsize = &x
+		mb.v.d.Tsize.Value = x
+		mb.v.d.Tsize.Maybe = schema.Maybe_Value
 	default:
-		return typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
+		return schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
 	}
 	return nil
 }
@@ -743,7 +741,7 @@ func (mb *_PBLink__MapBuilder) BuilderForValue(ks string) ipld.NodeBuilder {
 	case "Tsize":
 		return Int__NodeBuilder()
 	default:
-		panic(typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
+		panic(schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
 	}
 	return nil
 }
@@ -793,22 +791,22 @@ func (_PBLink__Repr) ReprKind() ipld.ReprKind {
 func (rn _PBLink__Repr) LookupString(key string) (ipld.Node, error) {
 	switch key {
 	case "Hash":
-		if rn.n.Hash == nil {
+		if rn.n.d.Hash.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
-		return *rn.n.Hash, nil
+		return rn.n.d.Hash.Value, nil
 	case "Name":
-		if rn.n.Name == nil {
+		if rn.n.d.Name.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
-		return *rn.n.Name, nil
+		return rn.n.d.Name.Value, nil
 	case "Tsize":
-		if rn.n.Tsize == nil {
+		if rn.n.d.Tsize.Maybe == schema.Maybe_Absent {
 			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
-		return *rn.n.Tsize, nil
+		return rn.n.d.Tsize.Value, nil
 	default:
-		return nil, typed.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
+		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
 func (rn _PBLink__Repr) Lookup(key ipld.Node) (ipld.Node, error) {
@@ -841,25 +839,25 @@ func (itr *_PBLink__ReprItr) Next() (k ipld.Node, v ipld.Node, _ error) {
 		switch itr.idx {
 		case 0:
 			k = String{"Hash"}
-			if itr.node.Hash == nil {
+			if itr.node.d.Hash.Maybe == schema.Maybe_Absent {
 				itr.idx++
 				continue
 			}
-			v = itr.node.Hash
+			v = itr.node.d.Hash.Value
 		case 1:
 			k = String{"Name"}
-			if itr.node.Name == nil {
+			if itr.node.d.Name.Maybe == schema.Maybe_Absent {
 				itr.idx++
 				continue
 			}
-			v = itr.node.Name
+			v = itr.node.d.Name.Value
 		case 2:
 			k = String{"Tsize"}
-			if itr.node.Tsize == nil {
+			if itr.node.d.Tsize.Maybe == schema.Maybe_Absent {
 				itr.idx++
 				continue
 			}
-			v = itr.node.Tsize
+			v = itr.node.d.Tsize.Value
 		default:
 			panic("unreachable")
 		}
@@ -876,13 +874,13 @@ func (_PBLink__Repr) ListIterator() ipld.ListIterator {
 }
 func (rn _PBLink__Repr) Length() int {
 	l := 3
-	if rn.n.Hash == nil {
+	if rn.n.d.Hash.Maybe == schema.Maybe_Absent {
 		l--
 	}
-	if rn.n.Name == nil {
+	if rn.n.d.Name.Maybe == schema.Maybe_Absent {
 		l--
 	}
-	if rn.n.Tsize == nil {
+	if rn.n.d.Tsize.Maybe == schema.Maybe_Absent {
 		l--
 	}
 	return l
@@ -920,7 +918,11 @@ func PBLink__ReprBuilder() ipld.NodeBuilder {
 	return _PBLink__ReprBuilder{}
 }
 func (nb _PBLink__ReprBuilder) CreateMap() (ipld.MapBuilder, error) {
-	return &_PBLink__ReprMapBuilder{v:&PBLink{}}, nil
+	mb := &_PBLink__ReprMapBuilder{v:&PBLink{}}
+	mb.v.d.Hash.Maybe = schema.Maybe_Absent
+	mb.v.d.Name.Maybe = schema.Maybe_Absent
+	mb.v.d.Tsize.Maybe = schema.Maybe_Absent
+	return mb, nil
 }
 
 type _PBLink__ReprMapBuilder struct{
@@ -943,15 +945,16 @@ func (mb *_PBLink__ReprMapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Link)
 		if !ok {
 			panic("field 'Hash' (key: 'Hash') in type PBLink is type Link; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Hash = &x
+		mb.v.d.Hash.Value = x
+		mb.v.d.Hash.Maybe = schema.Maybe_Value
 		mb.Hash__isset = true
 	case "Name":
 		if mb.Name__isset {
@@ -960,15 +963,16 @@ func (mb *_PBLink__ReprMapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(String)
 		if !ok {
 			panic("field 'Name' (key: 'Name') in type PBLink is type String; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Name = &x
+		mb.v.d.Name.Value = x
+		mb.v.d.Name.Maybe = schema.Maybe_Value
 		mb.Name__isset = true
 	case "Tsize":
 		if mb.Tsize__isset {
@@ -977,18 +981,19 @@ func (mb *_PBLink__ReprMapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Int)
 		if !ok {
 			panic("field 'Tsize' (key: 'Tsize') in type PBLink is type Int; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Tsize = &x
+		mb.v.d.Tsize.Value = x
+		mb.v.d.Tsize.Maybe = schema.Maybe_Value
 		mb.Tsize__isset = true
 	default:
-		return typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
+		return schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
 	}
 	return nil
 }
@@ -1012,7 +1017,7 @@ func (mb *_PBLink__ReprMapBuilder) BuilderForValue(ks string) ipld.NodeBuilder {
 	case "Tsize":
 		return Int__NodeBuilder()
 	default:
-		panic(typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
+		panic(schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
 	}
 	return nil
 }
@@ -1053,19 +1058,19 @@ type PBLinks struct{
 // TODO generateKindList.EmitNativeAccessors
 // TODO generateKindList.EmitNativeBuilder
 type MaybePBLinks struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value PBLinks
 }
 
 func (m MaybePBLinks) Must() PBLinks {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = PBLinks{}
-var _ typed.Node = PBLinks{}
+var _ schema.TypedNode = PBLinks{}
 
 func (PBLinks) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -1208,9 +1213,9 @@ func (lb *_PBLinks__ListBuilder) validate(v ipld.Node) error {
 	if v.IsNull() {
 		panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 	}
-	tv, ok := v.(typed.Node)
+	tv, ok := v.(schema.TypedNode)
 	if !ok {
-		panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+		panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 	}
 	_, ok = v.(PBLink)
 	if !ok {
@@ -1299,30 +1304,24 @@ func (n PBLinks) Representation() ipld.Node {
 	panic("TODO representation")
 }
 type PBNode struct{
-	Links PBLinks
-	Data Bytes
-	
+	d PBNode__Content
 }
 
-func (x PBLinks) FieldLinks() PBLinks {
-	// TODO going to tear through here with changes to Maybe system in a moment anyway
-	return PBLinks{}
+func (x PBNode) FieldLinks()PBLinks {
+	return x.d.Links
 }
-func (x Bytes) FieldData() Bytes {
-	// TODO going to tear through here with changes to Maybe system in a moment anyway
-	return Bytes{}
+func (x PBNode) FieldData()Bytes {
+	return x.d.Data
 }
 
 
 type PBNode__Content struct {
-	// TODO
-	// TODO
+	Links PBLinks
+	Data Bytes
 }
 
 func (b PBNode__Content) Build() (PBNode, error) {
-	x := PBNode{
-		// TODO
-	}
+	x := PBNode{b}
 	// FUTURE : want to support customizable validation.
 	//   but 'if v, ok := x.(schema.Validatable); ok {' doesn't fly: need a way to work on concrete types.
 	return x, nil
@@ -1336,19 +1335,19 @@ func (b PBNode__Content) MustBuild() PBNode {
 }
 
 type MaybePBNode struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value PBNode
 }
 
 func (m MaybePBNode) Must() PBNode {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = PBNode{}
-var _ typed.Node = PBNode{}
+var _ schema.TypedNode = PBNode{}
 
 func (PBNode) Type() schema.Type {
 	return nil /*TODO:typelit*/
@@ -1359,11 +1358,11 @@ func (PBNode) ReprKind() ipld.ReprKind {
 func (x PBNode) LookupString(key string) (ipld.Node, error) {
 	switch key {
 	case "Links":
-		return x.Links, nil
+		return x.d.Links, nil
 	case "Data":
-		return x.Data, nil
+		return x.d.Data, nil
 	default:
-		return nil, typed.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
+		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
 func (x PBNode) Lookup(key ipld.Node) (ipld.Node, error) {
@@ -1395,10 +1394,10 @@ func (itr *_PBNode__Itr) Next() (k ipld.Node, v ipld.Node, _ error) {
 	switch itr.idx {
 	case 0:
 		k = String{"Links"}
-		v = itr.node.Links
+		v = itr.node.d.Links
 	case 1:
 		k = String{"Data"}
-		v = itr.node.Data
+		v = itr.node.d.Data
 	default:
 		panic("unreachable")
 	}
@@ -1448,7 +1447,8 @@ func PBNode__NodeBuilder() ipld.NodeBuilder {
 	return _PBNode__NodeBuilder{}
 }
 func (nb _PBNode__NodeBuilder) CreateMap() (ipld.MapBuilder, error) {
-	return &_PBNode__MapBuilder{v:&PBNode{}}, nil
+	mb := &_PBNode__MapBuilder{v:&PBNode{}}
+	return mb, nil
 }
 
 type _PBNode__MapBuilder struct{
@@ -1467,32 +1467,32 @@ func (mb *_PBNode__MapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(PBLinks)
 		if !ok {
 			panic("field 'Links' in type PBNode is type PBLinks; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Links = x
+		mb.v.d.Links = x
 		mb.Links__isset = true
 	case "Data":
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Bytes)
 		if !ok {
 			panic("field 'Data' in type PBNode is type Bytes; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Data = x
+		mb.v.d.Data = x
 		mb.Data__isset = true
 	default:
-		return typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
+		return schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
 	}
 	return nil
 }
@@ -1520,7 +1520,7 @@ func (mb *_PBNode__MapBuilder) BuilderForValue(ks string) ipld.NodeBuilder {
 	case "Data":
 		return Bytes__NodeBuilder()
 	default:
-		panic(typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
+		panic(schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
 	}
 	return nil
 }
@@ -1570,11 +1570,11 @@ func (_PBNode__Repr) ReprKind() ipld.ReprKind {
 func (rn _PBNode__Repr) LookupString(key string) (ipld.Node, error) {
 	switch key {
 	case "Links":
-		return rn.n.Links, nil
+		return rn.n.d.Links, nil
 	case "Data":
-		return rn.n.Data, nil
+		return rn.n.d.Data, nil
 	default:
-		return nil, typed.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
+		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
 func (rn _PBNode__Repr) Lookup(key ipld.Node) (ipld.Node, error) {
@@ -1607,10 +1607,10 @@ func (itr *_PBNode__ReprItr) Next() (k ipld.Node, v ipld.Node, _ error) {
 		switch itr.idx {
 		case 0:
 			k = String{"Links"}
-			v = itr.node.Links
+			v = itr.node.d.Links
 		case 1:
 			k = String{"Data"}
-			v = itr.node.Data
+			v = itr.node.d.Data
 		default:
 			panic("unreachable")
 		}
@@ -1662,7 +1662,8 @@ func PBNode__ReprBuilder() ipld.NodeBuilder {
 	return _PBNode__ReprBuilder{}
 }
 func (nb _PBNode__ReprBuilder) CreateMap() (ipld.MapBuilder, error) {
-	return &_PBNode__ReprMapBuilder{v:&PBNode{}}, nil
+	mb := &_PBNode__ReprMapBuilder{v:&PBNode{}}
+	return mb, nil
 }
 
 type _PBNode__ReprMapBuilder struct{
@@ -1684,15 +1685,15 @@ func (mb *_PBNode__ReprMapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(PBLinks)
 		if !ok {
 			panic("field 'Links' (key: 'Links') in type PBNode is type PBLinks; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Links = x
+		mb.v.d.Links = x
 		mb.Links__isset = true
 	case "Data":
 		if mb.Data__isset {
@@ -1701,18 +1702,18 @@ func (mb *_PBNode__ReprMapBuilder) Insert(k, v ipld.Node) error {
 		if v.IsNull() {
 			panic("type mismatch on struct field assignment: cannot assign null to non-nullable field") // FIXME need an error type for this
 		}
-		tv, ok := v.(typed.Node)
+		tv, ok := v.(schema.TypedNode)
 		if !ok {
-			panic("need typed.Node for insertion into struct") // FIXME need an error type for this
+			panic("need schema.TypedNode for insertion into struct") // FIXME need an error type for this
 		}
 		x, ok := v.(Bytes)
 		if !ok {
 			panic("field 'Data' (key: 'Data') in type PBNode is type Bytes; cannot assign "+tv.Type().Name()) // FIXME need an error type for this
 		}
-		mb.v.Data = x
+		mb.v.d.Data = x
 		mb.Data__isset = true
 	default:
-		return typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
+		return schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks}
 	}
 	return nil
 }
@@ -1740,7 +1741,7 @@ func (mb *_PBNode__ReprMapBuilder) BuilderForValue(ks string) ipld.NodeBuilder {
 	case "Data":
 		return Bytes__NodeBuilder()
 	default:
-		panic(typed.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
+		panic(schema.ErrNoSuchField{Type: nil /*TODO:typelit*/, FieldName: ks})
 	}
 	return nil
 }

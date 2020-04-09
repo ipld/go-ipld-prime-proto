@@ -9,6 +9,7 @@ import (
 	merkledag_pb "github.com/ipfs/go-merkledag/pb"
 	ipld "github.com/ipld/go-ipld-prime"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
+	"github.com/ipld/go-ipld-prime/schema"
 )
 
 // DecodeDagProto is a fast path decoding to protobuf
@@ -30,35 +31,51 @@ func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
 			return nil, fmt.Errorf("unmarshal failed. %v", err)
 		}
 		pbLinks = append(pbLinks, PBLink{
-			&Link{cidlink.Link{Cid: hash}},
-			&String{link.GetName()},
-			&Int{int(link.GetTsize())},
+			d: PBLink__Content{
+				Hash: MaybeLink{
+					Maybe: schema.Maybe_Value,
+					Value: Link{cidlink.Link{Cid: hash}},
+				},
+				Name: MaybeString{
+					Maybe: schema.Maybe_Value,
+					Value: String{link.GetName()},
+				},
+				Tsize: MaybeInt{
+					Maybe: schema.Maybe_Value,
+					Value: Int{int(link.GetTsize())},
+				},
+			},
 		})
 	}
 	pbData := Bytes{pbn.GetData()}
-	return PBNode{PBLinks{pbLinks}, pbData}, nil
+	return PBNode{d: PBNode__Content{
+		Links: PBLinks{x: pbLinks},
+		Data:  pbData,
+	},
+	}, nil
 }
 
 // EncodeDagProto is a fast path encoding to protobuf
 // for PBNode types
 func (nd PBNode) EncodeDagProto(w io.Writer) error {
 	pbn := new(merkledag_pb.PBNode)
-	pbn.Links = make([]*merkledag_pb.PBLink, 0, len(nd.Links.x))
-	for _, link := range nd.Links.x {
+	pbn.Links = make([]*merkledag_pb.PBLink, 0, len(nd.d.Links.x))
+	for _, link := range nd.d.Links.x {
 		var hash []byte
-		if link.Hash != nil {
-			cid := link.Hash.x.(cidlink.Link).Cid
+		if link.d.Hash.Maybe == schema.Maybe_Value {
+			cid := link.d.Hash.Value.x.(cidlink.Link).Cid
 			if cid.Defined() {
 				hash = cid.Bytes()
 			}
 		}
 		var name *string
-		if link.Name != nil {
-			name = &link.Name.x
+		if link.d.Name.Maybe == schema.Maybe_Value {
+			tmp := link.d.Name.Value.x
+			name = &tmp
 		}
 		var tsize *uint64
-		if link.Tsize != nil {
-			tmp := uint64(link.Tsize.x)
+		if link.d.Tsize.Maybe == schema.Maybe_Value {
+			tmp := uint64(link.d.Tsize.Value.x)
 			tsize = &tmp
 		}
 		pbn.Links = append(pbn.Links, &merkledag_pb.PBLink{
@@ -66,7 +83,7 @@ func (nd PBNode) EncodeDagProto(w io.Writer) error {
 			Name:  name,
 			Tsize: tsize})
 	}
-	pbn.Data = nd.Data.x
+	pbn.Data = nd.d.Data.x
 	data, err := pbn.Marshal()
 	if err != nil {
 		return fmt.Errorf("marshal failed. %v", err)

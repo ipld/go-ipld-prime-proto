@@ -2,7 +2,6 @@ package dagpb
 
 import (
 	ipld "github.com/ipld/go-ipld-prime"
-	"github.com/ipld/go-ipld-prime/impl/typed"
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
@@ -13,19 +12,19 @@ type RawNode struct{ x []byte }
 // TODO generateKindBytes.EmitNativeAccessors
 // TODO generateKindBytes.EmitNativeBuilder
 type MaybeRawNode struct {
-	Maybe typed.Maybe
+	Maybe schema.Maybe
 	Value RawNode
 }
 
 func (m MaybeRawNode) Must() RawNode {
-	if m.Maybe != typed.Maybe_Value {
+	if m.Maybe != schema.Maybe_Value {
 		panic("unbox of a maybe rejected")
 	}
 	return m.Value
 }
 
 var _ ipld.Node = RawNode{}
-var _ typed.Node = RawNode{}
+var _ schema.TypedNode = RawNode{}
 
 func (RawNode) Type() schema.Type {
 	return nil /*TODO:typelit*/

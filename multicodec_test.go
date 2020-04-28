@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	ipld "github.com/ipld/go-ipld-prime"
+	dag "github.com/ipfs/go-merkledag"
 	dagpb "github.com/ipld/go-ipld-prime-proto"
 	. "github.com/warpfork/go-wish"
 )
@@ -21,29 +21,43 @@ func TestRoundTripRaw(t *testing.T) {
 	})
 	t.Run("decoding", func(t *testing.T) {
 		buf := bytes.NewBuffer(randBytes)
-		rawNode2, err := dagpb.RawDecoder(dagpb.RawNode__NodeBuilder(), buf)
+		nb := dagpb.Style.Raw.NewBuilder()
+		err := dagpb.RawDecoder(nb, buf)
 		Wish(t, err, ShouldEqual, nil)
+		rawNode2 := nb.Build()
 		Wish(t, rawNode2, ShouldEqual, rawNode)
 	})
 }
 
 func TestRoundTripProtbuf(t *testing.T) {
-	randBytes1 := randomBytes(256)
-	rawNode1, err := makeRawNode(randBytes1)
+	a := dag.NewRawNode([]byte("aaaa"))
+	b := dag.NewRawNode([]byte("bbbb"))
+	c := dag.NewRawNode([]byte("cccc"))
+
+	nd1 := &dag.ProtoNode{}
+	nd1.AddNodeLink("cat", a)
+
+	nd2 := &dag.ProtoNode{}
+	nd2.AddNodeLink("first", nd1)
+	nd2.AddNodeLink("dog", b)
+
+	nd3 := &dag.ProtoNode{}
+	nd3.AddNodeLink("second", nd2)
+	nd3.AddNodeLink("bear", c)
+
+	data := nd3.RawData()
+	ibuf := bytes.NewBuffer(data)
+	nb := dagpb.Style.Protobuf.NewBuilder()
+	err := dagpb.PBDecoder(nb, ibuf)
 	Wish(t, err, ShouldEqual, nil)
-	randBytes2 := randomBytes(256)
-	rawNode2, err := makeRawNode(randBytes2)
-	Wish(t, err, ShouldEqual, nil)
-	pbNode, err := makeProtoNode(map[string]ipld.Node{
-		"applesuace": rawNode1,
-		"oranges":    rawNode2,
-	})
-	Wish(t, err, ShouldEqual, nil)
+	pbNode := nb.Build()
 	t.Run("encode/decode equivalency", func(t *testing.T) {
 		var buf bytes.Buffer
 		err := dagpb.PBEncoder(pbNode, &buf)
 		Wish(t, err, ShouldEqual, nil)
-		pbNode2, err := dagpb.PBDecoder(dagpb.PBNode__NodeBuilder(), &buf)
+		nb = dagpb.Style.Protobuf.NewBuilder()
+		err = dagpb.PBDecoder(nb, &buf)
+		pbNode2 := nb.Build()
 		Wish(t, err, ShouldEqual, nil)
 		Wish(t, pbNode2, ShouldEqual, pbNode)
 	})

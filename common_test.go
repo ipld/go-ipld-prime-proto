@@ -3,10 +3,8 @@ package dagpb_test
 import (
 	"bytes"
 
-	blocks "github.com/ipfs/go-block-format"
 	ipld "github.com/ipld/go-ipld-prime"
 	dagpb "github.com/ipld/go-ipld-prime-proto"
-	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	"github.com/jbenet/go-random"
 )
 
@@ -20,12 +18,17 @@ func randomBytes(n int64) []byte {
 }
 
 func makeRawNode(randBytes []byte) (ipld.Node, error) {
-	raw_nb := dagpb.RawNode__NodeBuilder()
-	return raw_nb.CreateBytes(randBytes)
+	raw_nb := dagpb.Style.Raw.NewBuilder()
+	err := raw_nb.AssignBytes(randBytes)
+	if err != nil {
+		return nil, err
+	}
+	return raw_nb.Build(), nil
 }
 
+/*
 func makeProtoNode(linkedNodes map[string]ipld.Node) (ipld.Node, error) {
-	dagpb_nb := dagpb.PBNode__NodeBuilder()
+	dag_ns := dagpb.PBNode__NodeBuilder()
 	dagpb_mb, err := dagpb_nb.CreateMap()
 	if err != nil {
 		return nil, err
@@ -120,3 +123,4 @@ func makeProtoNode(linkedNodes map[string]ipld.Node) (ipld.Node, error) {
 	}
 	return dagpb_mb.Build()
 }
+*/

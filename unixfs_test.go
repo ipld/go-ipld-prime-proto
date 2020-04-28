@@ -24,8 +24,8 @@ import (
 	"github.com/ipfs/go-unixfs/importer/balanced"
 	ihelper "github.com/ipfs/go-unixfs/importer/helpers"
 	ipld "github.com/ipld/go-ipld-prime"
-	ipldfree "github.com/ipld/go-ipld-prime/impl/free"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
+	basicnode "github.com/ipld/go-ipld-prime/node/basic"
 	"github.com/ipld/go-ipld-prime/traversal"
 	"github.com/ipld/go-ipld-prime/traversal/selector"
 	"github.com/ipld/go-ipld-prime/traversal/selector/builder"
@@ -130,9 +130,11 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 
 	// load the root of the UnixFS dag in go-ipld-prime
 	clink := cidlink.Link{Cid: nd.Cid()}
-	primeNd, err := clink.Load(ctx, ipld.LinkContext{}, dagpb.PBNode__NodeBuilder(), loader)
+	nb := dagpb.Style.Protobuf.NewBuilder()
+	err = clink.Load(ctx, ipld.LinkContext{}, nb, loader)
 	Wish(t, err, ShouldEqual, nil)
 
+	primeNd := nb.Build()
 	// get a protobuf link builder
 	pbLinkBuilder := clink.LinkBuilder()
 
@@ -148,12 +150,12 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	rawLinkBuilder := rawLinkLink.LinkBuilder()
 
 	// setup a node builder chooser with DagPB + Raw support
-	var defaultChooser traversal.NodeBuilderChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeBuilder, error) {
-		return ipldfree.NodeBuilder(), nil
+	var defaultChooser traversal.LinkTargetNodeStyleChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeStyle, error) {
+		return basicnode.Style.Any, nil
 	})
 
 	// create a selector for the whole UnixFS dag
-	ssb := builder.NewSelectorSpecBuilder(ipldfree.NodeBuilder())
+	ssb := builder.NewSelectorSpecBuilder(basicnode.Style.Any)
 
 	allSelector, err := ssb.ExploreRecursive(selector.RecursionLimitNone(),
 		ssb.ExploreAll(ssb.ExploreRecursiveEdge())).Selector()
@@ -162,18 +164,18 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	// execute the traversal
 	err = traversal.Progress{
 		Cfg: &traversal.Config{
-			LinkLoader:             loader,
-			LinkNodeBuilderChooser: defaultChooser,
+			LinkLoader:                 loader,
+			LinkTargetNodeStyleChooser: defaultChooser,
 		},
 	}.WalkAdv(primeNd, allSelector, func(pg traversal.Progress, nd ipld.Node, r traversal.VisitReason) error {
 		// for each node encountered, check if it's a DabPB Node or a Raw Node and if so
 		// encode and store it in the new blockstore
-		pbNode, ok := nd.(dagpb.PBNode)
+		pbNode, ok := nd.(*dagpb.PBNode)
 		if ok {
 			_, err := pbLinkBuilder.Build(ctx, ipld.LinkContext{}, pbNode, storer)
 			return err
 		}
-		rawNode, ok := nd.(dagpb.RawNode)
+		rawNode, ok := nd.(*dagpb.RawNode)
 		if ok {
 			_, err := rawLinkBuilder.Build(ctx, ipld.LinkContext{}, rawNode, storer)
 			return err

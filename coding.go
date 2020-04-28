@@ -7,28 +7,27 @@ import (
 
 	"github.com/ipfs/go-cid"
 	merkledag_pb "github.com/ipfs/go-merkledag/pb"
-	ipld "github.com/ipld/go-ipld-prime"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
 // DecodeDagProto is a fast path decoding to protobuf
 // from PBNode__NodeBuilders
-func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
+func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) error {
 	var pbn merkledag_pb.PBNode
 	encoded, err := ioutil.ReadAll(r)
 	if err != nil {
-		return nil, fmt.Errorf("io error during unmarshal. %v", err)
+		return fmt.Errorf("io error during unmarshal. %v", err)
 	}
 	if err := pbn.Unmarshal(encoded); err != nil {
-		return nil, fmt.Errorf("unmarshal failed. %v", err)
+		return fmt.Errorf("unmarshal failed. %v", err)
 	}
 	pbLinks := make([]PBLink, 0, len(pbn.Links))
 	for _, link := range pbn.Links {
 		hash, err := cid.Cast(link.GetHash())
 
 		if err != nil {
-			return nil, fmt.Errorf("unmarshal failed. %v", err)
+			return fmt.Errorf("unmarshal failed. %v", err)
 		}
 		pbLinks = append(pbLinks, PBLink{
 			d: PBLink__Content{
@@ -47,12 +46,9 @@ func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) (ipld.Node, error) {
 			},
 		})
 	}
-	pbData := Bytes{pbn.GetData()}
-	return PBNode{d: PBNode__Content{
-		Links: PBLinks{x: pbLinks},
-		Data:  pbData,
-	},
-	}, nil
+	nb.nd.d.Links.x = pbLinks
+	nb.nd.d.Data.x = pbn.GetData()
+	return nil
 }
 
 // EncodeDagProto is a fast path encoding to protobuf
@@ -97,12 +93,13 @@ func (nd PBNode) EncodeDagProto(w io.Writer) error {
 
 // DecodeDagRaw is a fast path decoding to protobuf
 // from RawNode__NodeBuilders
-func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) (ipld.Node, error) {
+func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) error {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
-		return nil, fmt.Errorf("io error during unmarshal. %v", err)
+		return fmt.Errorf("io error during unmarshal. %v", err)
 	}
-	return RawNode{data}, nil
+	nb.nd.x = data
+	return nil
 }
 
 // EncodeDagRaw is a fast path encoding to protobuf

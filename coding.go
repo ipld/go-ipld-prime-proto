@@ -5,23 +5,21 @@ import (
 	"io"
 	"io/ioutil"
 
+	ggio "github.com/gogo/protobuf/io"
 	"github.com/ipfs/go-cid"
 	merkledag_pb "github.com/ipfs/go-merkledag/pb"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
+const MessageSizeMax = 1 << 22 // 4 MB
+
 // DecodeDagProto is a fast path decoding to protobuf
 // from PBNode__NodeBuilders
 func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) error {
 	var pbn merkledag_pb.PBNode
-	encoded, err := ioutil.ReadAll(r)
-	if err != nil {
-		return fmt.Errorf("io error during unmarshal. %v", err)
-	}
-	if err := pbn.Unmarshal(encoded); err != nil {
-		return fmt.Errorf("unmarshal failed. %v", err)
-	}
+	pbr := ggio.NewDelimitedReader(r, MessageSizeMax)
+	pbr.ReadMsg(&pbn)
 	pbLinks := make([]PBLink, 0, len(pbn.Links))
 	for _, link := range pbn.Links {
 		hash, err := cid.Cast(link.GetHash())

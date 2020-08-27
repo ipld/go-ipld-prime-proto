@@ -3,6 +3,7 @@ module github.com/ipld/go-ipld-prime-proto
 go 1.13
 
 require (
+	github.com/gogo/protobuf v1.3.1
 	github.com/ipfs/go-block-format v0.0.2
 	github.com/ipfs/go-blockservice v0.1.3
 	github.com/ipfs/go-cid v0.0.5

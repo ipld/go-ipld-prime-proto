@@ -1,7 +1,6 @@
 package dagpb
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -12,13 +11,18 @@ import (
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
+// byteAccessor is a reader interface that can access underlying bytes
+type byteAccesor interface {
+	Bytes() []byte
+}
+
 // DecodeDagProto is a fast path decoding to protobuf
 // from PBNode__NodeBuilders
 func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) error {
 	var pbn merkledag_pb.PBNode
 	var encoded []byte
 	var err error
-	byteBuf, ok := r.(*bytes.Buffer)
+	byteBuf, ok := r.(byteAccesor)
 	if ok {
 		encoded = byteBuf.Bytes()
 	} else {
@@ -102,7 +106,7 @@ func (nd PBNode) EncodeDagProto(w io.Writer) error {
 // DecodeDagRaw is a fast path decoding to protobuf
 // from RawNode__NodeBuilders
 func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) error {
-	byteBuf, ok := r.(*bytes.Buffer)
+	byteBuf, ok := r.(byteAccesor)
 	if ok {
 		nb.nd.x = byteBuf.Bytes()
 		return nil

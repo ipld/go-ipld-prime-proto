@@ -11,13 +11,25 @@ import (
 	"github.com/ipld/go-ipld-prime/schema"
 )
 
+// byteAccessor is a reader interface that can access underlying bytes
+type byteAccesor interface {
+	Bytes() []byte
+}
+
 // DecodeDagProto is a fast path decoding to protobuf
 // from PBNode__NodeBuilders
 func (nb _PBNode__NodeBuilder) DecodeDagProto(r io.Reader) error {
 	var pbn merkledag_pb.PBNode
-	encoded, err := ioutil.ReadAll(r)
-	if err != nil {
-		return fmt.Errorf("io error during unmarshal. %v", err)
+	var encoded []byte
+	var err error
+	byteBuf, ok := r.(byteAccesor)
+	if ok {
+		encoded = byteBuf.Bytes()
+	} else {
+		encoded, err = ioutil.ReadAll(r)
+		if err != nil {
+			return fmt.Errorf("io error during unmarshal. %v", err)
+		}
 	}
 	if err := pbn.Unmarshal(encoded); err != nil {
 		return fmt.Errorf("unmarshal failed. %v", err)
@@ -94,6 +106,11 @@ func (nd PBNode) EncodeDagProto(w io.Writer) error {
 // DecodeDagRaw is a fast path decoding to protobuf
 // from RawNode__NodeBuilders
 func (nb _RawNode__NodeBuilder) DecodeDagRaw(r io.Reader) error {
+	byteBuf, ok := r.(byteAccesor)
+	if ok {
+		nb.nd.x = byteBuf.Bytes()
+		return nil
+	}
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return fmt.Errorf("io error during unmarshal. %v", err)

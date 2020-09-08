@@ -15,12 +15,12 @@ import (
 )
 
 func TestNodeBuilderChooser(t *testing.T) {
-	nb1 := basicnode.Style__Any{}
-	nb2 := basicnode.Style__String{}
-	var nb1Chooser traversal.LinkTargetNodeStyleChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeStyle, error) {
+	nb1 := basicnode.Prototype.Any
+	nb2 := basicnode.Prototype.String
+	var nb1Chooser traversal.LinkTargetNodePrototypeChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodePrototype, error) {
 		return nb1, nil
 	})
-	var nb2Chooser traversal.LinkTargetNodeStyleChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeStyle, error) {
+	var nb2Chooser traversal.LinkTargetNodePrototypeChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodePrototype, error) {
 		return nb2, nil
 	})
 	bytes := randomBytes(256)

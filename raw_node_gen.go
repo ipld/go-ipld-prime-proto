@@ -13,17 +13,17 @@ var _ schema.TypedNode = RawNode{}
 func (RawNode) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Bytes
 }
-func (RawNode) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
+func (RawNode) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
 }
-func (RawNode) Lookup(ipld.Node) (ipld.Node, error) {
+func (RawNode) LookupByNode(ipld.Node) (ipld.Node, error) {
 	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "Lookup", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
 }
-func (RawNode) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Bytes}
+func (RawNode) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Bytes}
 }
-func (RawNode) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupSegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Bytes}
+func (RawNode) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "LookupBySegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Bytes}
 }
 func (RawNode) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "RawNode", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}}
@@ -34,7 +34,7 @@ func (RawNode) ListIterator() ipld.ListIterator {
 func (RawNode) Length() int {
 	return -1
 }
-func (RawNode) IsUndefined() bool {
+func (RawNode) IsAbsent() bool {
 	return false
 }
 func (RawNode) IsNull() bool {

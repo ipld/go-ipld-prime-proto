@@ -7,14 +7,14 @@ import (
 var Style style
 
 type style struct {
-	Protobuf _PBNode__NodeStyle
-	Raw      _RawNode__NodeStyle
+	Protobuf _PBNode__NodePrototype
+	Raw      _RawNode__NodePrototype
 }
 
-type _PBNode__NodeStyle struct {
+type _PBNode__NodePrototype struct {
 }
 
-func (ns _PBNode__NodeStyle) NewBuilder() ipld.NodeBuilder {
+func (ns _PBNode__NodePrototype) NewBuilder() ipld.NodeBuilder {
 	var nd PBNode
 	return &_PBNode__NodeBuilder{_PBNode__NodeAssembler{nd: &nd}}
 }
@@ -76,50 +76,50 @@ func (na *_PBNode__NodeAssembler) AssignNode(_ ipld.Node) error {
 	panic("not implemented")
 }
 
-func (na *_PBNode__NodeAssembler) Style() ipld.NodeStyle {
-	return _PBNode__NodeStyle{}
+func (na *_PBNode__NodeAssembler) Prototype() ipld.NodePrototype {
+	return _PBNode__NodePrototype{}
 }
 
-func (nd PBNode) Style() ipld.NodeStyle {
-	return _PBNode__NodeStyle{}
+func (nd PBNode) Prototype() ipld.NodePrototype {
+	return _PBNode__NodePrototype{}
 }
 
-func (nd _PBNode__Repr) Style() ipld.NodeStyle {
+func (nd _PBNode__Repr) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nd PBLinks) Style() ipld.NodeStyle {
+func (nd PBLinks) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nd PBLink) Style() ipld.NodeStyle {
+func (nd PBLink) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nd _PBLink__Repr) Style() ipld.NodeStyle {
+func (nd _PBLink__Repr) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nb Link) Style() ipld.NodeStyle {
+func (nb Link) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nb Bytes) Style() ipld.NodeStyle {
+func (nb Bytes) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nb Int) Style() ipld.NodeStyle {
+func (nb Int) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-func (nb String) Style() ipld.NodeStyle {
+func (nb String) Prototype() ipld.NodePrototype {
 	return nil
 }
 
-type _RawNode__NodeStyle struct {
+type _RawNode__NodePrototype struct {
 }
 
-func (ns _RawNode__NodeStyle) NewBuilder() ipld.NodeBuilder {
+func (ns _RawNode__NodePrototype) NewBuilder() ipld.NodeBuilder {
 	var nd RawNode
 	return &_RawNode__NodeBuilder{_RawNode__NodeAssembler{nd: &nd}}
 }
@@ -182,10 +182,10 @@ func (na *_RawNode__NodeAssembler) AssignNode(_ ipld.Node) error {
 	panic("not implemented")
 }
 
-func (na *_RawNode__NodeAssembler) Style() ipld.NodeStyle {
-	return _RawNode__NodeStyle{}
+func (na *_RawNode__NodeAssembler) Prototype() ipld.NodePrototype {
+	return _RawNode__NodePrototype{}
 }
 
-func (nd RawNode) Style() ipld.NodeStyle {
-	return _RawNode__NodeStyle{}
+func (nd RawNode) Prototype() ipld.NodePrototype {
+	return _RawNode__NodePrototype{}
 }

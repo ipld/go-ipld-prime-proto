@@ -139,23 +139,23 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	pbLinkBuilder := clink.LinkBuilder()
 
 	// get a raw link builder
-	links, err := primeNd.LookupString("Links")
+	links, err := primeNd.LookupByString("Links")
 	Wish(t, err, ShouldEqual, nil)
-	link, err := links.LookupIndex(0)
+	link, err := links.LookupByIndex(0)
 	Wish(t, err, ShouldEqual, nil)
-	rawLink, err := link.LookupString("Hash")
+	rawLink, err := link.LookupByString("Hash")
 	Wish(t, err, ShouldEqual, nil)
 	rawLinkLink, err := rawLink.AsLink()
 	Wish(t, err, ShouldEqual, nil)
 	rawLinkBuilder := rawLinkLink.LinkBuilder()
 
 	// setup a node builder chooser with DagPB + Raw support
-	var defaultChooser traversal.LinkTargetNodeStyleChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodeStyle, error) {
-		return basicnode.Style.Any, nil
+	var defaultChooser traversal.LinkTargetNodePrototypeChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodePrototype, error) {
+		return basicnode.Prototype.Any, nil
 	})
 
 	// create a selector for the whole UnixFS dag
-	ssb := builder.NewSelectorSpecBuilder(basicnode.Style.Any)
+	ssb := builder.NewSelectorSpecBuilder(basicnode.Prototype.Any)
 
 	allSelector, err := ssb.ExploreRecursive(selector.RecursionLimitNone(),
 		ssb.ExploreAll(ssb.ExploreRecursiveEdge())).Selector()
@@ -164,8 +164,8 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	// execute the traversal
 	err = traversal.Progress{
 		Cfg: &traversal.Config{
-			LinkLoader:                 loader,
-			LinkTargetNodeStyleChooser: defaultChooser,
+			LinkLoader:                     loader,
+			LinkTargetNodePrototypeChooser: defaultChooser,
 		},
 	}.WalkAdv(primeNd, allSelector, func(pg traversal.Progress, nd ipld.Node, r traversal.VisitReason) error {
 		// for each node encountered, check if it's a DabPB Node or a Raw Node and if so

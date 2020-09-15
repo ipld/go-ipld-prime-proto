@@ -13,17 +13,17 @@ var _ schema.TypedNode = String{}
 func (String) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_String
 }
-func (String) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_String}
+func (String) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_String}
 }
-func (String) Lookup(ipld.Node) (ipld.Node, error) {
+func (String) LookupByNode(ipld.Node) (ipld.Node, error) {
 	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "Lookup", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_String}
 }
-func (String) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_String}
+func (String) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_String}
 }
-func (String) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupSegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_String}
+func (String) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "String", MethodName: "LookupBySegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_String}
 }
 func (String) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "String", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_String}}
@@ -34,7 +34,7 @@ func (String) ListIterator() ipld.ListIterator {
 func (String) Length() int {
 	return -1
 }
-func (String) IsUndefined() bool {
+func (String) IsAbsent() bool {
 	return false
 }
 func (String) IsNull() bool {
@@ -110,17 +110,17 @@ var _ schema.TypedNode = Int{}
 func (Int) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Int
 }
-func (Int) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Int}
+func (Int) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Int}
 }
-func (Int) Lookup(ipld.Node) (ipld.Node, error) {
+func (Int) LookupByNode(ipld.Node) (ipld.Node, error) {
 	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "Lookup", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Int}
 }
-func (Int) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Int}
+func (Int) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Int}
 }
-func (Int) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupSegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Int}
+func (Int) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Int", MethodName: "LookupBySegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Int}
 }
 func (Int) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "Int", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Int}}
@@ -131,7 +131,7 @@ func (Int) ListIterator() ipld.ListIterator {
 func (Int) Length() int {
 	return -1
 }
-func (Int) IsUndefined() bool {
+func (Int) IsAbsent() bool {
 	return false
 }
 func (Int) IsNull() bool {
@@ -188,17 +188,17 @@ var _ schema.TypedNode = Bytes{}
 func (Bytes) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Bytes
 }
-func (Bytes) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
+func (Bytes) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
 }
-func (Bytes) Lookup(ipld.Node) (ipld.Node, error) {
+func (Bytes) LookupByNode(ipld.Node) (ipld.Node, error) {
 	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "Lookup", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}
 }
-func (Bytes) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Bytes}
+func (Bytes) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Bytes}
 }
-func (Bytes) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupSegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Bytes}
+func (Bytes) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "LookupBySegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Bytes}
 }
 func (Bytes) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "Bytes", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Bytes}}
@@ -209,7 +209,7 @@ func (Bytes) ListIterator() ipld.ListIterator {
 func (Bytes) Length() int {
 	return -1
 }
-func (Bytes) IsUndefined() bool {
+func (Bytes) IsAbsent() bool {
 	return false
 }
 func (Bytes) IsNull() bool {
@@ -263,17 +263,17 @@ var _ schema.TypedNode = Link{}
 func (Link) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Link
 }
-func (Link) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Link}
+func (Link) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Link}
 }
-func (Link) Lookup(ipld.Node) (ipld.Node, error) {
+func (Link) LookupByNode(ipld.Node) (ipld.Node, error) {
 	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "Lookup", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Link}
 }
-func (Link) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Link}
+func (Link) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Link}
 }
-func (Link) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupSegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Link}
+func (Link) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "Link", MethodName: "LookupBySegment", AppropriateKind: ipld.ReprKindSet_Recursive, ActualKind: ipld.ReprKind_Link}
 }
 func (Link) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "Link", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_Link}}
@@ -284,7 +284,7 @@ func (Link) ListIterator() ipld.ListIterator {
 func (Link) Length() int {
 	return -1
 }
-func (Link) IsUndefined() bool {
+func (Link) IsAbsent() bool {
 	return false
 }
 func (Link) IsNull() bool {
@@ -338,39 +338,39 @@ var _ schema.TypedNode = PBLink{}
 func (PBLink) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Map
 }
-func (x PBLink) LookupString(key string) (ipld.Node, error) {
+func (x PBLink) LookupByString(key string) (ipld.Node, error) {
 	switch key {
 	case "Hash":
 		if x.d.Hash.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, nil
+			return ipld.Absent, nil
 		}
 		return x.d.Hash.Value, nil
 	case "Name":
 		if x.d.Name.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, nil
+			return ipld.Absent, nil
 		}
 		return x.d.Name.Value, nil
 	case "Tsize":
 		if x.d.Tsize.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, nil
+			return ipld.Absent, nil
 		}
 		return x.d.Tsize.Value, nil
 	default:
 		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
-func (x PBLink) Lookup(key ipld.Node) (ipld.Node, error) {
+func (x PBLink) LookupByNode(key ipld.Node) (ipld.Node, error) {
 	ks, err := key.AsString()
 	if err != nil {
 		return nil, err
 	}
-	return x.LookupString(ks)
+	return x.LookupByString(ks)
 }
-func (PBLink) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "PBLink", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
+func (PBLink) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "PBLink", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
 }
-func (n PBLink) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return n.LookupString(seg.String())
+func (n PBLink) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return n.LookupByString(seg.String())
 }
 func (x PBLink) MapIterator() ipld.MapIterator {
 	return &_PBLink__Itr{&x, 0}
@@ -389,21 +389,21 @@ func (itr *_PBLink__Itr) Next() (k ipld.Node, v ipld.Node, _ error) {
 	case 0:
 		k = String{"Hash"}
 		if itr.node.d.Hash.Maybe == schema.Maybe_Absent {
-			v = ipld.Undef
+			v = ipld.Absent
 			break
 		}
 		v = itr.node.d.Hash.Value
 	case 1:
 		k = String{"Name"}
 		if itr.node.d.Name.Maybe == schema.Maybe_Absent {
-			v = ipld.Undef
+			v = ipld.Absent
 			break
 		}
 		v = itr.node.d.Name.Value
 	case 2:
 		k = String{"Tsize"}
 		if itr.node.d.Tsize.Maybe == schema.Maybe_Absent {
-			v = ipld.Undef
+			v = ipld.Absent
 			break
 		}
 		v = itr.node.d.Tsize.Value
@@ -423,7 +423,7 @@ func (PBLink) ListIterator() ipld.ListIterator {
 func (PBLink) Length() int {
 	return 3
 }
-func (PBLink) IsUndefined() bool {
+func (PBLink) IsAbsent() bool {
 	return false
 }
 func (PBLink) IsNull() bool {
@@ -510,39 +510,39 @@ type _PBLink__Repr struct {
 func (_PBLink__Repr) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Map
 }
-func (rn _PBLink__Repr) LookupString(key string) (ipld.Node, error) {
+func (rn _PBLink__Repr) LookupByString(key string) (ipld.Node, error) {
 	switch key {
 	case "Hash":
 		if rn.n.d.Hash.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
+			return ipld.Absent, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
 		return rn.n.d.Hash.Value, nil
 	case "Name":
 		if rn.n.d.Name.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
+			return ipld.Absent, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
 		return rn.n.d.Name.Value, nil
 	case "Tsize":
 		if rn.n.d.Tsize.Maybe == schema.Maybe_Absent {
-			return ipld.Undef, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
+			return ipld.Absent, ipld.ErrNotExists{ipld.PathSegmentOfString(key)}
 		}
 		return rn.n.d.Tsize.Value, nil
 	default:
 		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
-func (rn _PBLink__Repr) Lookup(key ipld.Node) (ipld.Node, error) {
+func (rn _PBLink__Repr) LookupByNode(key ipld.Node) (ipld.Node, error) {
 	ks, err := key.AsString()
 	if err != nil {
 		return nil, err
 	}
-	return rn.LookupString(ks)
+	return rn.LookupByString(ks)
 }
-func (_PBLink__Repr) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "PBLink.Representation", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
+func (_PBLink__Repr) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "PBLink.Representation", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
 }
-func (n _PBLink__Repr) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return n.LookupString(seg.String())
+func (n _PBLink__Repr) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return n.LookupByString(seg.String())
 }
 func (rn _PBLink__Repr) MapIterator() ipld.MapIterator {
 	return &_PBLink__ReprItr{rn.n, 0}
@@ -607,7 +607,7 @@ func (rn _PBLink__Repr) Length() int {
 	}
 	return l
 }
-func (_PBLink__Repr) IsUndefined() bool {
+func (_PBLink__Repr) IsAbsent() bool {
 	return false
 }
 func (_PBLink__Repr) IsNull() bool {
@@ -638,28 +638,28 @@ var _ schema.TypedNode = PBLinks{}
 func (PBLinks) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_List
 }
-func (PBLinks) LookupString(string) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "PBLinks", MethodName: "LookupString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_List}
+func (PBLinks) LookupByString(string) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "PBLinks", MethodName: "LookupByString", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_List}
 }
-func (x PBLinks) Lookup(key ipld.Node) (ipld.Node, error) {
+func (x PBLinks) LookupByNode(key ipld.Node) (ipld.Node, error) {
 	ki, err := key.AsInt()
 	if err != nil {
 		return nil, err
 	}
-	return x.LookupIndex(ki)
+	return x.LookupByIndex(ki)
 }
-func (x PBLinks) LookupIndex(index int) (ipld.Node, error) {
+func (x PBLinks) LookupByIndex(index int) (ipld.Node, error) {
 	if index >= len(x.x) {
 		return nil, ipld.ErrNotExists{ipld.PathSegmentOfInt(index)}
 	}
 	return x.x[index], nil
 }
-func (n PBLinks) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
+func (n PBLinks) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
 	idx, err := seg.Index()
 	if err != nil {
 		return nil, err
 	}
-	return n.LookupIndex(idx)
+	return n.LookupByIndex(idx)
 }
 func (PBLinks) MapIterator() ipld.MapIterator {
 	return mapIteratorReject{ipld.ErrWrongKind{TypeName: "PBLinks", MethodName: "MapIterator", AppropriateKind: ipld.ReprKindSet_JustMap, ActualKind: ipld.ReprKind_List}}
@@ -690,7 +690,7 @@ func (itr *_PBLinks__Itr) Done() bool {
 func (x PBLinks) Length() int {
 	return len(x.x)
 }
-func (PBLinks) IsUndefined() bool {
+func (PBLinks) IsAbsent() bool {
 	return false
 }
 func (PBLinks) IsNull() bool {
@@ -746,7 +746,7 @@ var _ schema.TypedNode = PBNode{}
 func (PBNode) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Map
 }
-func (x PBNode) LookupString(key string) (ipld.Node, error) {
+func (x PBNode) LookupByString(key string) (ipld.Node, error) {
 	switch key {
 	case "Links":
 		return x.d.Links, nil
@@ -756,18 +756,18 @@ func (x PBNode) LookupString(key string) (ipld.Node, error) {
 		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
-func (x PBNode) Lookup(key ipld.Node) (ipld.Node, error) {
+func (x PBNode) LookupByNode(key ipld.Node) (ipld.Node, error) {
 	ks, err := key.AsString()
 	if err != nil {
 		return nil, err
 	}
-	return x.LookupString(ks)
+	return x.LookupByString(ks)
 }
-func (PBNode) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "PBNode", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
+func (PBNode) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "PBNode", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
 }
-func (n PBNode) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return n.LookupString(seg.String())
+func (n PBNode) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return n.LookupByString(seg.String())
 }
 func (x PBNode) MapIterator() ipld.MapIterator {
 	return &_PBNode__Itr{&x, 0}
@@ -805,7 +805,7 @@ func (PBNode) ListIterator() ipld.ListIterator {
 func (PBNode) Length() int {
 	return 2
 }
-func (PBNode) IsUndefined() bool {
+func (PBNode) IsAbsent() bool {
 	return false
 }
 func (PBNode) IsNull() bool {
@@ -888,7 +888,7 @@ type _PBNode__Repr struct {
 func (_PBNode__Repr) ReprKind() ipld.ReprKind {
 	return ipld.ReprKind_Map
 }
-func (rn _PBNode__Repr) LookupString(key string) (ipld.Node, error) {
+func (rn _PBNode__Repr) LookupByString(key string) (ipld.Node, error) {
 	switch key {
 	case "Links":
 		return rn.n.d.Links, nil
@@ -898,18 +898,18 @@ func (rn _PBNode__Repr) LookupString(key string) (ipld.Node, error) {
 		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, FieldName: key}
 	}
 }
-func (rn _PBNode__Repr) Lookup(key ipld.Node) (ipld.Node, error) {
+func (rn _PBNode__Repr) LookupByNode(key ipld.Node) (ipld.Node, error) {
 	ks, err := key.AsString()
 	if err != nil {
 		return nil, err
 	}
-	return rn.LookupString(ks)
+	return rn.LookupByString(ks)
 }
-func (_PBNode__Repr) LookupIndex(idx int) (ipld.Node, error) {
-	return nil, ipld.ErrWrongKind{TypeName: "PBNode.Representation", MethodName: "LookupIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
+func (_PBNode__Repr) LookupByIndex(idx int) (ipld.Node, error) {
+	return nil, ipld.ErrWrongKind{TypeName: "PBNode.Representation", MethodName: "LookupByIndex", AppropriateKind: ipld.ReprKindSet_JustList, ActualKind: ipld.ReprKind_Map}
 }
-func (n _PBNode__Repr) LookupSegment(seg ipld.PathSegment) (ipld.Node, error) {
-	return n.LookupString(seg.String())
+func (n _PBNode__Repr) LookupBySegment(seg ipld.PathSegment) (ipld.Node, error) {
+	return n.LookupByString(seg.String())
 }
 func (rn _PBNode__Repr) MapIterator() ipld.MapIterator {
 	return &_PBNode__ReprItr{rn.n, 0}
@@ -950,7 +950,7 @@ func (rn _PBNode__Repr) Length() int {
 	l := 2
 	return l
 }
-func (_PBNode__Repr) IsUndefined() bool {
+func (_PBNode__Repr) IsAbsent() bool {
 	return false
 }
 func (_PBNode__Repr) IsNull() bool {

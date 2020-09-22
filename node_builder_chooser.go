@@ -16,9 +16,9 @@ func AddDagPBSupportToChooser(existing traversal.LinkTargetNodePrototypeChooser)
 		}
 		switch c.Cid.Prefix().Codec {
 		case 0x70:
-			return _PBNode__NodePrototype{}, nil
+			return Type.PBNode, nil
 		case 0x55:
-			return _RawNode__NodePrototype{}, nil
+			return Type.RawNode, nil
 		default:
 			return existing(lnk, lnkCtx)
 		}

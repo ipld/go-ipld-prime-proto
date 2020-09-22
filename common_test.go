@@ -18,7 +18,7 @@ func randomBytes(n int64) []byte {
 }
 
 func makeRawNode(randBytes []byte) (ipld.Node, error) {
-	raw_nb := dagpb.Style.Raw.NewBuilder()
+	raw_nb := dagpb.Type.RawNode.NewBuilder()
 	err := raw_nb.AssignBytes(randBytes)
 	if err != nil {
 		return nil, err

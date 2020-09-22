@@ -130,7 +130,7 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 
 	// load the root of the UnixFS dag in go-ipld-prime
 	clink := cidlink.Link{Cid: nd.Cid()}
-	nb := dagpb.Style.Protobuf.NewBuilder()
+	nb := dagpb.Type.PBNode.NewBuilder()
 	err = clink.Load(ctx, ipld.LinkContext{}, nb, loader)
 	Wish(t, err, ShouldEqual, nil)
 
@@ -170,12 +170,12 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	}.WalkAdv(primeNd, allSelector, func(pg traversal.Progress, nd ipld.Node, r traversal.VisitReason) error {
 		// for each node encountered, check if it's a DabPB Node or a Raw Node and if so
 		// encode and store it in the new blockstore
-		pbNode, ok := nd.(*dagpb.PBNode)
+		pbNode, ok := nd.(dagpb.PBNode)
 		if ok {
 			_, err := pbLinkBuilder.Build(ctx, ipld.LinkContext{}, pbNode, storer)
 			return err
 		}
-		rawNode, ok := nd.(*dagpb.RawNode)
+		rawNode, ok := nd.(dagpb.RawNode)
 		if ok {
 			_, err := rawLinkBuilder.Build(ctx, ipld.LinkContext{}, rawNode, storer)
 			return err

@@ -21,7 +21,7 @@ func TestRoundTripRaw(t *testing.T) {
 	})
 	t.Run("decoding", func(t *testing.T) {
 		buf := bytes.NewBuffer(randBytes)
-		nb := dagpb.Style.Raw.NewBuilder()
+		nb := dagpb.Type.RawNode.NewBuilder()
 		err := dagpb.RawDecoder(nb, buf)
 		Wish(t, err, ShouldEqual, nil)
 		rawNode2 := nb.Build()
@@ -47,7 +47,7 @@ func TestRoundTripProtbuf(t *testing.T) {
 
 	data := nd3.RawData()
 	ibuf := bytes.NewBuffer(data)
-	nb := dagpb.Style.Protobuf.NewBuilder()
+	nb := dagpb.Type.PBNode.NewBuilder()
 	err := dagpb.PBDecoder(nb, ibuf)
 	Wish(t, err, ShouldEqual, nil)
 	pbNode := nb.Build()
@@ -55,7 +55,7 @@ func TestRoundTripProtbuf(t *testing.T) {
 		var buf bytes.Buffer
 		err := dagpb.PBEncoder(pbNode, &buf)
 		Wish(t, err, ShouldEqual, nil)
-		nb = dagpb.Style.Protobuf.NewBuilder()
+		nb = dagpb.Type.PBNode.NewBuilder()
 		err = dagpb.PBDecoder(nb, &buf)
 		pbNode2 := nb.Build()
 		Wish(t, err, ShouldEqual, nil)

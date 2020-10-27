@@ -770,6 +770,7 @@ func (ma *_PBNode__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		}
 		ma.s += fieldBit__PBNode_Links
 		ma.state = maState_midValue
+		ma.f = 0
 		ma.ca_Links.w = &ma.w.Links
 		ma.ca_Links.m = &ma.cm
 		return &ma.ca_Links, nil
@@ -779,6 +780,7 @@ func (ma *_PBNode__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		}
 		ma.s += fieldBit__PBNode_Data
 		ma.state = maState_midValue
+		ma.f = 1
 		ma.ca_Data.w = &ma.w.Data
 		ma.ca_Data.m = &ma.cm
 		return &ma.ca_Data, nil

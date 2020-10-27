@@ -898,6 +898,7 @@ func (ma *_PBLink__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		}
 		ma.s += fieldBit__PBLink_Hash
 		ma.state = maState_midValue
+		ma.f = 0
 		ma.ca_Hash.w = ma.w.Hash.v
 		ma.ca_Hash.m = &ma.w.Hash.m
 
@@ -908,6 +909,7 @@ func (ma *_PBLink__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		}
 		ma.s += fieldBit__PBLink_Name
 		ma.state = maState_midValue
+		ma.f = 1
 		ma.ca_Name.w = ma.w.Name.v
 		ma.ca_Name.m = &ma.w.Name.m
 
@@ -918,6 +920,7 @@ func (ma *_PBLink__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		}
 		ma.s += fieldBit__PBLink_Tsize
 		ma.state = maState_midValue
+		ma.f = 2
 		ma.ca_Tsize.w = ma.w.Tsize.v
 		ma.ca_Tsize.m = &ma.w.Tsize.m
 

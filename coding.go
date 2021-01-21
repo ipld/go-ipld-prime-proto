@@ -37,7 +37,7 @@ func (nb *_PBNode__Builder) DecodeDagProto(r io.Reader) error {
 	return fluent.Recover(func() {
 		fb := fluent.WrapAssembler(nb)
 		fb.CreateMap(-1, func(fmb fluent.MapAssembler) {
-			fmb.AssembleEntry("Links").CreateList(len(pbn.Links), func(flb fluent.ListAssembler) {
+			fmb.AssembleEntry("Links").CreateList(int64(len(pbn.Links)), func(flb fluent.ListAssembler) {
 				for _, link := range pbn.Links {
 					hash, err := cid.Cast(link.GetHash())
 
@@ -47,7 +47,7 @@ func (nb *_PBNode__Builder) DecodeDagProto(r io.Reader) error {
 					flb.AssembleValue().CreateMap(-1, func(fmb fluent.MapAssembler) {
 						fmb.AssembleEntry("Hash").AssignLink(cidlink.Link{Cid: hash})
 						fmb.AssembleEntry("Name").AssignString(link.GetName())
-						fmb.AssembleEntry("Tsize").AssignInt(int(link.GetTsize()))
+						fmb.AssembleEntry("Tsize").AssignInt(int64(link.GetTsize()))
 					})
 				}
 			})

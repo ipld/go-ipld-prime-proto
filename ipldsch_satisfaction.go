@@ -2814,8 +2814,8 @@ func (n PBNode) Representation() ipld.Node {
 type _PBNode__Repr _PBNode
 
 var (
-	fieldName__PBNode_Links_serial = _String{"Links"}
-	fieldName__PBNode_Data_serial  = _String{"Data"}
+	fieldName__PBNode_Links_serial = _String{"links"}
+	fieldName__PBNode_Data_serial  = _String{"data"}
 )
 var _ ipld.Node = &_PBNode__Repr{}
 
@@ -2824,9 +2824,9 @@ func (_PBNode__Repr) Kind() ipld.Kind {
 }
 func (n *_PBNode__Repr) LookupByString(key string) (ipld.Node, error) {
 	switch key {
-	case "Links":
+	case "links":
 		return n.Links.Representation(), nil
-	case "Data":
+	case "data":
 		return n.Data.Representation(), nil
 	default:
 		return nil, schema.ErrNoSuchField{Type: nil /*TODO*/, Field: ipld.PathSegmentOfString(key)}
@@ -3080,7 +3080,7 @@ func (ma *_PBNode__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		panic("invalid state: AssembleEntry cannot be called on an assembler that's already finished")
 	}
 	switch k {
-	case "Links":
+	case "links":
 		if ma.s&fieldBit__PBNode_Links != 0 {
 			return nil, ipld.ErrRepeatedMapKey{&fieldName__PBNode_Links_serial}
 		}
@@ -3090,7 +3090,7 @@ func (ma *_PBNode__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler, e
 		ma.ca_Links.w = &ma.w.Links
 		ma.ca_Links.m = &ma.cm
 		return &ma.ca_Links, nil
-	case "Data":
+	case "data":
 		if ma.s&fieldBit__PBNode_Data != 0 {
 			return nil, ipld.ErrRepeatedMapKey{&fieldName__PBNode_Data_serial}
 		}
@@ -3167,10 +3167,10 @@ func (ma *_PBNode__ReprAssembler) Finish() error {
 	if ma.s&fieldBits__PBNode_sufficient != fieldBits__PBNode_sufficient {
 		err := ipld.ErrMissingRequiredField{Missing: make([]string, 0)}
 		if ma.s&fieldBit__PBNode_Links == 0 {
-			err.Missing = append(err.Missing, "Links")
+			err.Missing = append(err.Missing, "Links (serial:\"links\")")
 		}
 		if ma.s&fieldBit__PBNode_Data == 0 {
-			err.Missing = append(err.Missing, "Data")
+			err.Missing = append(err.Missing, "Data (serial:\"data\")")
 		}
 		return err
 	}
@@ -3210,14 +3210,14 @@ func (ka *_PBNode__ReprKeyAssembler) AssignString(k string) error {
 		panic("misuse: KeyAssembler held beyond its valid lifetime")
 	}
 	switch k {
-	case "Links":
+	case "links":
 		if ka.s&fieldBit__PBNode_Links != 0 {
 			return ipld.ErrRepeatedMapKey{&fieldName__PBNode_Links_serial}
 		}
 		ka.s += fieldBit__PBNode_Links
 		ka.state = maState_expectValue
 		ka.f = 0
-	case "Data":
+	case "data":
 		if ka.s&fieldBit__PBNode_Data != 0 {
 			return ipld.ErrRepeatedMapKey{&fieldName__PBNode_Data_serial}
 		}

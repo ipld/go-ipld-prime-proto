@@ -34,7 +34,10 @@ func main() {
 			schema.SpawnStructField("Links", "PBLinks", false, false),
 			schema.SpawnStructField("Data", "Bytes", false, false),
 		},
-		schema.SpawnStructRepresentationMap(nil),
+		schema.SpawnStructRepresentationMap(map[string]string{
+			"Links": "links",
+			"Data":  "data",
+		}),
 	))
 	ts.Accumulate(schema.SpawnBytes("RawNode"))
 	gengo.Generate(".", pkgName, ts, adjCfg)

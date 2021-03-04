@@ -37,8 +37,8 @@ import (
 const UnixfsChunkSize uint64 = 1 << 10
 const UnixfsLinksPerLevel = 1024
 
-func makeLoader(bs bstore.Blockstore) ipld.Loader {
-	return func(lnk ipld.Link, lnkCtx ipld.LinkContext) (io.Reader, error) {
+func makeLoader(bs bstore.Blockstore) ipld.BlockReadOpener {
+	return func(lnkCtx ipld.LinkContext, lnk ipld.Link) (io.Reader, error) {
 		c, ok := lnk.(cidlink.Link)
 		if !ok {
 			return nil, errors.New("Incorrect Link Type")
@@ -52,10 +52,10 @@ func makeLoader(bs bstore.Blockstore) ipld.Loader {
 	}
 }
 
-func makeStorer(bs bstore.Blockstore) ipld.Storer {
-	return func(lnkCtx ipld.LinkContext) (io.Writer, ipld.StoreCommitter, error) {
+func makeStorer(bs bstore.Blockstore) ipld.BlockWriteOpener {
+	return func(lnkCtx ipld.LinkContext) (io.Writer, ipld.BlockWriteCommitter, error) {
 		var buf bytes.Buffer
-		var committer ipld.StoreCommitter = func(lnk ipld.Link) error {
+		var committer ipld.BlockWriteCommitter = func(lnk ipld.Link) error {
 			c, ok := lnk.(cidlink.Link)
 			if !ok {
 				return errors.New("Incorrect Link Type")
@@ -128,15 +128,16 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	// setup an IPLD storer for blockstore 2
 	storer := makeStorer(bs2)
 
+	lsys := cidlink.DefaultLinkSystem()
+	lsys.StorageReadOpener = loader
+	lsys.StorageWriteOpener = storer
 	// load the root of the UnixFS dag in go-ipld-prime
 	clink := cidlink.Link{Cid: nd.Cid()}
-	nb := dagpb.Type.PBNode.NewBuilder()
-	err = clink.Load(ctx, ipld.LinkContext{}, nb, loader)
+	primeNd, err := lsys.Load(ipld.LinkContext{}, clink, dagpb.Type.PBNode)
 	Wish(t, err, ShouldEqual, nil)
 
-	primeNd := nb.Build()
 	// get a protobuf link builder
-	pbLinkBuilder := clink.LinkBuilder()
+	pbLinkBuilder := clink.Prototype()
 
 	// get a raw link builder
 	links, err := primeNd.LookupByString("Links")
@@ -147,7 +148,7 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	Wish(t, err, ShouldEqual, nil)
 	rawLinkLink, err := rawLink.AsLink()
 	Wish(t, err, ShouldEqual, nil)
-	rawLinkBuilder := rawLinkLink.LinkBuilder()
+	rawLinkBuilder := rawLinkLink.Prototype()
 
 	// setup a node builder chooser with DagPB + Raw support
 	var defaultChooser traversal.LinkTargetNodePrototypeChooser = dagpb.AddDagPBSupportToChooser(func(ipld.Link, ipld.LinkContext) (ipld.NodePrototype, error) {
@@ -164,7 +165,7 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 	// execute the traversal
 	err = traversal.Progress{
 		Cfg: &traversal.Config{
-			LinkLoader:                     loader,
+			LinkSystem:                     lsys,
 			LinkTargetNodePrototypeChooser: defaultChooser,
 		},
 	}.WalkAdv(primeNd, allSelector, func(pg traversal.Progress, nd ipld.Node, r traversal.VisitReason) error {
@@ -172,12 +173,12 @@ func TestUnixFSSelectorCopy(t *testing.T) {
 		// encode and store it in the new blockstore
 		pbNode, ok := nd.(dagpb.PBNode)
 		if ok {
-			_, err := pbLinkBuilder.Build(ctx, ipld.LinkContext{}, pbNode, storer)
+			_, err := lsys.Store(ipld.LinkContext{}, pbLinkBuilder, pbNode)
 			return err
 		}
 		rawNode, ok := nd.(dagpb.RawNode)
 		if ok {
-			_, err := rawLinkBuilder.Build(ctx, ipld.LinkContext{}, rawNode, storer)
+			_, err := lsys.Store(ipld.LinkContext{}, rawLinkBuilder, rawNode)
 			return err
 		}
 		return nil

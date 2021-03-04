@@ -5,7 +5,7 @@ import (
 	"io"
 
 	ipld "github.com/ipld/go-ipld-prime"
-	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
+	"github.com/ipld/go-ipld-prime/multicodec"
 )
 
 var (
@@ -13,17 +13,17 @@ var (
 	ErrNoAutomaticDecoding = errors.New("No automatic decoding for this type, node builder must provide fast path")
 	// ErrNoAutomaticEncoding means the Node must provide a fast path encoding method on its own
 	ErrNoAutomaticEncoding                           = errors.New("No automatic encoding for this type, node must provide fast path")
-	_                      cidlink.MulticodecDecoder = PBDecoder
-	_                      cidlink.MulticodecEncoder = PBEncoder
-	_                      cidlink.MulticodecDecoder = RawDecoder
-	_                      cidlink.MulticodecEncoder = RawEncoder
+	_                      ipld.Decoder = PBDecoder
+	_                      ipld.Encoder = PBEncoder
+	_                      ipld.Decoder = RawDecoder
+	_                      ipld.Encoder = RawEncoder
 )
 
 func init() {
-	cidlink.RegisterMulticodecDecoder(0x70, PBDecoder)
-	cidlink.RegisterMulticodecEncoder(0x70, PBEncoder)
-	cidlink.RegisterMulticodecDecoder(0x55, RawDecoder)
-	cidlink.RegisterMulticodecEncoder(0x55, RawEncoder)
+	multicodec.DecoderRegistry[0x70] = PBDecoder
+	multicodec.EncoderRegistry[0x70] = PBEncoder
+	multicodec.DecoderRegistry[0x55] = RawDecoder
+	multicodec.EncoderRegistry[0x55] = RawEncoder
 }
 
 // PBDecoder is a decoder function for Dag Protobuf nodes

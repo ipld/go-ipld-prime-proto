@@ -1,6 +1,6 @@
 module github.com/ipld/go-ipld-prime-proto
 
-go 1.13
+go 1.16
 
 require (
 	github.com/ipfs/go-block-format v0.0.2

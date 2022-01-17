@@ -1,3 +1,4 @@
+// Deprecated: use github.com/ipld/go-codec-dagpb instead.
 module github.com/ipld/go-ipld-prime-proto
 
 go 1.16

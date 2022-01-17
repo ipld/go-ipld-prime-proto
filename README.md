@@ -4,6 +4,8 @@
 [![Coverage Status](https://codecov.io/gh/ipld/go-ipld-prime-proto/branch/master/graph/badge.svg)](https://codecov.io/gh/ipld/go-ipld-prime-proto)
 [![Travis CI](https://travis-ci.com/ipld/go-ipld-prime-proto.svg?branch=master)](https://travis-ci.com/ipld/go-ipld-prime-proto)
 
+### This Go module [is deprecated](https://github.com/ipld/go-ipld-prime-proto/issues/23). Use [go-codec-dagpb](https://github.com/ipld/go-codec-dagpb) instead.
+
 > An implementation of the [DAG Protobuf](https://github.com/ipld/specs/blob/master/block-layer/codecs/dag-pb.md) for the [go-ipld-prime library](https://github.com/ipld/go-ipld-prime)
 
 ## Table of Contents
